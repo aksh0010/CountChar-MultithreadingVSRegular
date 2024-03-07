@@ -4,31 +4,41 @@ import java.util.Scanner;
 
 public class CountChar {
 
-  private static Scanner input_Scanner;
-  private static File file;
-
+  private static Scanner input_Scanner= new Scanner(System.in);
+  private static File file= new File("input.txt");
+  private static int whitespace_count=0;
+  
+  
+  
   public static void main(String[] args) {
-    input_Scanner = new Scanner(System.in);
-    file = new File("input.txt");
+	  
+	System.out.println("Main");
+   
     
     try {
       input_Scanner = new Scanner(file);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-
-    // System.out.println(getString());
+    getString();
 
 
   }
 
   public static String getString() {
-    StringBuilder Final_string = new StringBuilder();
-    String each_line;
-    while ((each_line = input_Scanner.nextLine()) != null) {
-      Final_string.append(each_line);
+	System.out.println("getstring method");
+    StringBuilder final_string = new StringBuilder();
+    
+    while (input_Scanner.hasNext()) {
+      
+    	final_string.append(input_Scanner.next());
+    	whitespace_count+=1;
     }
-
-    return Final_string.toString();
+    
+    System.out.println("Total Char :"+final_string.toString().length());
+    System.out.println("Total Whitespace :"+whitespace_count);
+    return final_string.toString();
   }
+  
+
 }

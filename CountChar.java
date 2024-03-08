@@ -11,7 +11,7 @@ public class CountChar {
   
   
   public static void main(String[] args) {
-	  
+		long startTime = System.currentTimeMillis();
 	System.out.println("Main");
    
     
@@ -22,7 +22,8 @@ public class CountChar {
     }
     getString();
 
-
+    long endTime = System.currentTimeMillis();
+    System.out.println("Thread execution time: " + (endTime - startTime) + " milliseconds");
   }
 
   public static String getString() {

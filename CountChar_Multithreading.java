@@ -32,7 +32,7 @@ public class CountChar_Multithreading {
 	  
 		 long startTime = System.currentTimeMillis();   
 		 String filename = "input.txt"; // Change the filename here
-	     int numThreads = 4; // Change the number of threads as needed
+	     int numThreads = 1; // Change the number of threads as needed
 
 	
 		CountChar_Multithreading threading_object= new CountChar_Multithreading(filename, numThreads);

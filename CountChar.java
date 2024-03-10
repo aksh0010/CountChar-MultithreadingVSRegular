@@ -8,7 +8,7 @@ public class CountChar {
     private static File file = new File("input.txt");
     private static StringBuilder finalString = new StringBuilder(); // shared string builder
     private static int whitespaceCount = 0; // shared whitespace coun
-    
+    private static int newline_chars=0;
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
         System.out.println("Main");
@@ -22,7 +22,7 @@ public class CountChar {
         String content = getString();
         countWhitespace(content);
 
-        System.out.println("Total Char: " + content.length());
+        System.out.println("Total Char: " + (content.length()+newline_chars));
         System.out.println("Total Whitespace: " + whitespaceCount);
 
         long endTime = System.currentTimeMillis();
@@ -35,6 +35,7 @@ public class CountChar {
 
         while (inputScanner.hasNextLine()) {
             String line = inputScanner.nextLine();
+            newline_chars++;
             finalString.append(line);
         }
 

@@ -4,42 +4,48 @@ import java.util.Scanner;
 
 public class CountChar {
 
-  private static Scanner input_Scanner= new Scanner(System.in);
-  private static File file= new File("input.txt");
-  private static int whitespace_count=0;
-  
-  
-  
-  public static void main(String[] args) {
-		long startTime = System.currentTimeMillis();
-	System.out.println("Main");
-   
-    
-    try {
-      input_Scanner = new Scanner(file);
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
+    private static Scanner inputScanner = new Scanner(System.in);
+    private static File file = new File("input.txt");
+
+    public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
+        System.out.println("Main");
+
+        try {
+            inputScanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        String content = getString();
+        int whitespaceCount = countWhitespace(content);
+
+        System.out.println("Total Char: " + content.length());
+        System.out.println("Total Whitespace: " + whitespaceCount);
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("Thread execution time: " + (endTime - startTime) + " milliseconds");
     }
-    getString();
 
-    long endTime = System.currentTimeMillis();
-    System.out.println("Thread execution time: " + (endTime - startTime) + " milliseconds");
-  }
+    public static String getString() {
+        System.out.println("getString method");
+        StringBuilder finalString = new StringBuilder();
 
-  public static String getString() {
-	System.out.println("getstring method");
-    StringBuilder final_string = new StringBuilder();
-    
-    while (input_Scanner.hasNext()) {
-      
-    	final_string.append(input_Scanner.next());
-    	whitespace_count+=1;
+        while (inputScanner.hasNextLine()) {
+            String line = inputScanner.nextLine();
+            finalString.append(line);
+        }
+
+        return finalString.toString();
     }
-    
-    System.out.println("Total Char :"+final_string.toString().length());
-    System.out.println("Total Whitespace :"+whitespace_count);
-    return final_string.toString();
-  }
-  
 
+    public static int countWhitespace(String str) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (Character.isWhitespace(str.charAt(i))) {
+                count++;
+            }
+        }
+        return count;
+    }
 }

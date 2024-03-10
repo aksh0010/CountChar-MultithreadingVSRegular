@@ -94,18 +94,17 @@ public class CountChar_Multithreading {
             e.printStackTrace();
         }
 
-        System.out.println("Total Char: " + finalString.length());
+        System.out.println("Total Char: " + (finalString.length()-1));
         System.out.println("Total Whitespace: " + whitespaceCount);
     }
 
     public static void main(String[] args) {
+    	System.out.println("Main");
+    	String filePath = "input.txt";
+    	int numThreads = 2;
+    	CountChar_Multithreading counter = new CountChar_Multithreading(filePath, numThreads);
+    	    
         long startTime = System.currentTimeMillis();
-        System.out.println("Main");
-
-        String filePath = "input.txt";
-        int numThreads = 2;
-
-        CountChar_Multithreading counter = new CountChar_Multithreading(filePath, numThreads);
         counter.countWhitespace();
 
         long endTime = System.currentTimeMillis();

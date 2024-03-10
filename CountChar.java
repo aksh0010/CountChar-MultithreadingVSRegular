@@ -37,6 +37,7 @@ public class CountChar {
             String line = inputScanner.nextLine();
             newline_chars++;
             finalString.append(line);
+            
         }
 
         return finalString.toString();

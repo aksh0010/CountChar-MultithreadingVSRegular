@@ -7,15 +7,23 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class CountChar_Multithreading {
 
-    private static File file = new File("input.txt");
-    private static StringBuilder finalString = new StringBuilder();
-    private static int whitespaceCount = 0;
-    private static Lock lock = new ReentrantLock();
-    private static Condition condition = lock.newCondition();
+    private File file;
+    private StringBuilder finalString = new StringBuilder();
+    private int whitespaceCount = 0;
+    private Lock lock = new ReentrantLock();
+    private Condition condition = lock.newCondition();
+//    private int total_newline=0;
 
-    public static void main(String[] args) {
+    public CountChar_Multithreading(String filePath, int numThreads) {
+        file = new File(filePath);
+        if (numThreads < 1) {
+            throw new IllegalArgumentException("Number of threads must be at least 1");
+        }
+    }
+
+    public void countWhitespace(int numThreads) {
         long startTime = System.currentTimeMillis();
-        System.out.println("Main");
+        System.out.println("Multithread Main");
 
         try {
             Scanner inputScanner = new Scanner(file);
@@ -24,14 +32,12 @@ public class CountChar_Multithreading {
             while (inputScanner.hasNextLine()) {
                 String line = inputScanner.nextLine();
                 finalString.append(line).append('\n');
+//                total_newline++;
             }
 
             inputScanner.close();
 
-            int numThreads = 2; // Number of threads to use
-            CountThread[] threads = new CountThread[numThreads];
-
-            // Calculate chunk size for each thread
+            CountThread[] threads = new CountThread[numThreads]; // Number of threads
             int chunkSize = finalString.length() / numThreads;
             int start = 0;
 
@@ -50,11 +56,11 @@ public class CountChar_Multithreading {
             }
 
             // Output results
-            System.out.println("Total Char: " + finalString.length());
-            System.out.println("Total Whitespace: " + whitespaceCount);
+            System.out.println("Multithread Total Char: " + finalString.length());
+            System.out.println("Multithread Total Whitespace: " + (whitespaceCount));
 
             long endTime = System.currentTimeMillis();
-            System.out.println("Thread execution time: " + (endTime - startTime) + " milliseconds");
+            System.out.println("Multithread Thread execution time: " + (endTime - startTime) + " milliseconds");
 
         } catch (FileNotFoundException | InterruptedException e) {
             e.printStackTrace();
@@ -71,22 +77,24 @@ public class CountChar_Multithreading {
 
         @Override
         public void run() {
-            lock.lock();
-            try {
-                for (int i = 0; i < chunk.length(); i++) {
-                    if (Character.isWhitespace(chunk.charAt(i))) {
-                        localWhitespaceCount++;
-                    }
+        	System.out.println("Inside one of the thread");
+            for (int i = 0; i < chunk.length(); i++) {
+                if (Character.isWhitespace(chunk.charAt(i))) {
+                    localWhitespaceCount++;
                 }
-                // Signal that this thread has finished counting
-                condition.signal();
-            } finally {
-                lock.unlock();
             }
         }
 
         public int getWhitespaceCount() {
             return localWhitespaceCount;
         }
+    }
+
+    public static void main(String[] args) {
+        String filePath = "input.txt"; // File path
+        int numThreads = 4; // Number of threads
+
+        CountChar_Multithreading counter = new CountChar_Multithreading(filePath, numThreads);
+        counter.countWhitespace(numThreads);
     }
 }

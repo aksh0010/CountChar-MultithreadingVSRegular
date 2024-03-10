@@ -22,7 +22,7 @@ public class CountChar_Multithreading {
     }
 
     public void countWhitespace(int numThreads) {
-        long startTime = System.currentTimeMillis();
+     
         System.out.println("Multithread Main");
 
         try {
@@ -32,19 +32,20 @@ public class CountChar_Multithreading {
             while (inputScanner.hasNextLine()) {
                 String line = inputScanner.nextLine();
                 finalString.append(line).append('\n');
-//                total_newline++;
             }
 
             inputScanner.close();
-
+            long startTime = System.currentTimeMillis();
             CountThread[] threads = new CountThread[numThreads]; // Number of threads
             int chunkSize = finalString.length() / numThreads;
             int start = 0;
 
+            Lock lock = new ReentrantLock(); // Create a lock object
+
             // Start threads for counting whitespace
             for (int i = 0; i < numThreads; i++) {
                 int end = (i == numThreads - 1) ? finalString.length() : start + chunkSize;
-                threads[i] = new CountThread(finalString.substring(start, end));
+                threads[i] = new CountThread(finalString.substring(start, end), lock); // Pass the lock to each thread
                 threads[i].start();
                 start = end;
             }
@@ -67,20 +68,30 @@ public class CountChar_Multithreading {
         }
     }
 
+
     static class CountThread extends Thread {
         private String chunk;
         private int localWhitespaceCount = 0;
+        private Lock lock; // Add a lock variable
 
-        public CountThread(String chunk) {
+        public CountThread(String chunk, Lock lock) {
             this.chunk = chunk;
+            this.lock = lock;
         }
 
         @Override
         public void run() {
-        	System.out.println("Inside one of the thread");
+            System.out.println("Inside one of the thread");
             for (int i = 0; i < chunk.length(); i++) {
                 if (Character.isWhitespace(chunk.charAt(i))) {
-                    localWhitespaceCount++;
+                    // Acquire the lock before updating the shared variable
+                    lock.lock();
+                    try {
+                        localWhitespaceCount++;
+                    } finally {
+                        // Release the lock after updating the shared variable
+                        lock.unlock();
+                    }
                 }
             }
         }
@@ -89,6 +100,7 @@ public class CountChar_Multithreading {
             return localWhitespaceCount;
         }
     }
+
 
     public static void main(String[] args) {
         String filePath = "input.txt"; // File path
